@@ -1,78 +1,133 @@
-from rest_framework import generics, status
+from django.db.models import Sum, Count
+from rest_framework import generics, status, response
 from .serializer import *
 from .models import *
-from rest_framework.response import Response
+from rest_framework.views import APIView
+
 
 class ClientView(generics.CreateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
-    def get(self, request):
-        data=request.data
 
-        serializer = self.serializer_class(data=data)
-
-        user = request.user
-
-        if serializer.is_valid():
-            serializer.save(customer=user)
-
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class ClientListView(generics.ListAPIView):
+    queryset = Client.objects.all()
+    serializer_class = ClientListSerializer
 
 
+class RegionView(generics.ListCreateAPIView):
+    queryset = Region.objects.all()
+    serializer_class = RegionSerializer
 
-class TreePriceView(generics.CreateAPIView):
+
+class RegionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Region.objects.all()
+    serializer_class = RegionSerializer
+
+
+class DistrictView(generics.CreateAPIView):
+    queryset = District
+    serializer_class = DistrictSerialier
+
+
+class DistrictDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = District
+    serializer_class = DistrictSerialier
+
+
+class TreeTypeView(generics.CreateAPIView):
+    queryset = TreeType
+    serializer_class = TreeTypeSerializer
+
+
+class TreeTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TreeType
+    serializer_class = TreeTypeSerializer
+
+
+class TreeNameView(generics.CreateAPIView):
+    queryset = TreeName
+    serializer_class = TreeNameSerializer
+
+
+class TreeNameDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TreeName
+    serializer_class = TreeNameSerializer
+
+
+class TreePriceView(generics.ListCreateAPIView):
     queryset = TreePrice.objects.all()
     serializer_class = TreePriceSerializer
 
-    def get(self, request):
-        data=request.data
 
-        serializer = self.serializer_class(data=data)
+class TreePriceDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TreePrice
+    serializer_class = TreePriceSerializer
 
-        user = request.user
 
-        if serializer.is_valid():
-            serializer.save(customer=user)
-
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class DashboardView(generics.CreateAPIView):
-    queryset = Dashboard.objects.all()
-    serializer_class = DashboardSerializer
-
-    def get(self, request):
-        data = request.data
-
-        serializer = self.serializer_class(data=data)
-
-        user = request.user
-
-        if serializer.is_valid():
-            serializer.save(customer=user)
-
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class FeedbackView(generics.CreateAPIView):
+class FeedbackView(generics.ListCreateAPIView):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
 
+
+class FeedbackDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Feedback
+    serializer_class = FeedbackSerializer
+
+
+class MainDashboardView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        clients = Client.objects.all().aggregate(count=Count('id'))['count']
+        total_trees = Tree.objects.all().aggregate(sum1=Sum('tree_number'))['sum1']
+        planted_trees = Tree.objects.all().aggregate(sum2=Sum('tree_number'))['sum2']
+        being_planted_trees = Tree.objects.all().aggregate(sum3=Sum('tree_number'))['sum3']
+
+        res = {
+            'clients number': clients,
+            'total trees': total_trees,
+            'planted trees': planted_trees,
+            'being planted trees': being_planted_trees
+        }
+
+        return response.Response(res)
+
+
+class Dashboard(APIView):
+
     def get(self, request):
-        data = request.data
+        regions = Region.objects.all()
 
-        serializer = self.serializer_class(data=data)
+        res = {}
+        for i in regions:
+            client_number = Client.objects.filter(region=i.id).aggregate(son=Count("id"))['son']
 
-        user = request.user
+            trees = Tree.objects.filter(client__region=i)
+            tree_number = trees.aggregate(sum=Sum('tree_number'))['sum']
 
-        if serializer.is_valid():
-            serializer.save(customer=user)
+            if tree_number == None:
+                tree_number = 0
 
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+            res[i.name] = {
+                'Xayriya qilganlar soni: ': client_number,
+                'Ekilgan daraxtlar soni: ': tree_number,
+                'Ekilayotgan daraxtlar soni: ': tree_number
+            }
 
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return response.Response(res)
+
+
+class ClientPics(APIView):
+
+    def get(self, request):
+        client_pic = Client.objects.values_list('url')
+
+        pics = {}
+
+        for i in client_pic:
+            for j in i:
+                pics.update({'@' + j[26:-1]: 'image/' + j[26:-1] + '.jpg'})
+
+        return response.Response(pics)
+
+

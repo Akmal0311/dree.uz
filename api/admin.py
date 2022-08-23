@@ -7,7 +7,6 @@ admin.site.register(TreeName)
 admin.site.register(Region)
 admin.site.register(District)
 admin.site.register(TreePrice)
-admin.site.register(Dashboard)
 admin.site.register(Feedback)
 
 class TreeInline(admin.TabularInline):

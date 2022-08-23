@@ -10,16 +10,6 @@ class Feedback(models.Model):
     def __str__(self):
         return self.full_name
 
-class Dashboard(models.Model):
-    name = models.ForeignKey('Region', on_delete=models.CASCADE)
-    number_of_donors = models.IntegerField()
-    planted_trees = models.IntegerField()
-    being_planted_tree = models.IntegerField()
-
-    def __str__(self):
-        return str(self.name)
-
-
 class TreePrice(models.Model):
     tree_name = models.ForeignKey('TreeName', on_delete=models.CASCADE)
     price = models.IntegerField()

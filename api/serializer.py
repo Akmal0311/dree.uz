@@ -1,5 +1,4 @@
-import requests, json, random, os.path, instaloader
-from bs4 import BeautifulSoup as bs
+import instaloader
 from rest_framework import serializers
 from .models import *
 
@@ -8,20 +7,35 @@ class FeedbackSerializer(serializers.ModelSerializer):
         model = Feedback
         fields = '__all__'
 
-class DashboardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Dashboard
-        fields = '__all__'
-
 class TreePriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = TreePrice
+        fields = '__all__'
+
+class TreeTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TreeType
+        fields = '__all__'
+
+class TreeNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TreeName
         fields = '__all__'
 
 class TreeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tree
         fields = ['tree_type', 'tree_name', 'tree_number']
+
+class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = '__all__'
+
+class DistrictSerialier(serializers.ModelSerializer):
+    class Meta:
+        model = District
+        fields = '__all__'
 
 class ClientSerializer(serializers.ModelSerializer):
     trees = TreeSerializer(many=True)
@@ -39,24 +53,28 @@ class ClientSerializer(serializers.ModelSerializer):
             neighborhood=validated_data.pop('neighborhood'),
             url=validated_data.pop('url'),
         )
+        insta_pic_down(str(client.url))
+
         for data in validated_data.get('trees'):
              Tree.objects.create(
                 client=client,
                 tree_type=data.get('tree_type'),
                 tree_name=data.get('tree_name'),
-                tree_number=data.get('tree_number'),
-            )
-
-        insta_pic_down(str(client.url))
+                tree_number=data.get('tree_number'),)
 
 
 def insta_pic_down(url):
 
     username = url[26:-1]
 
-    a = instaloader.Instaloader(sleep=False, dirname_pattern='media', save_metadata=False, compress_json=False)
+    pic = instaloader.Instaloader(sleep=False, dirname_pattern='media', save_metadata=False, compress_json=False)
 
-    a.download_profile(username, profile_pic_only=True)
+    pic.download_profile(username, profile_pic_only=True)
 
+
+class ClientListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = '__all__'
 
 
