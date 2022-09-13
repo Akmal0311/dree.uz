@@ -37,6 +37,7 @@ class DistrictSerialier(serializers.ModelSerializer):
         model = District
         fields = '__all__'
 
+
 class ClientSerializer(serializers.ModelSerializer):
     trees = TreeSerializer(many=True)
 
@@ -60,7 +61,8 @@ class ClientSerializer(serializers.ModelSerializer):
                 client=client,
                 tree_type=data.get('tree_type'),
                 tree_name=data.get('tree_name'),
-                tree_number=data.get('tree_number'),)
+                tree_number=data.get('tree_number'),
+             )
 
 
 def insta_pic_down(url):

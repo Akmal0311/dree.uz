@@ -19,6 +19,5 @@ urlpatterns = [
     path('pics/', ClientPics.as_view(), name='client_pics'),
     path('feedback/', FeedbackView.as_view(), name='feedback'),
     path('feedback/<int:pk>', FeedbackDetailView.as_view(), name='feedback_detail'),
-
 ]
 
