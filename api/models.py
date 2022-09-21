@@ -10,6 +10,7 @@ class Feedback(models.Model):
     def __str__(self):
         return self.full_name
 
+
 class TreePrice(models.Model):
     tree_name = models.ForeignKey('TreeName', on_delete=models.CASCADE)
     price = models.IntegerField()
@@ -17,12 +18,14 @@ class TreePrice(models.Model):
     def __str__(self):
         return '{} = {}'.format(self.tree_name, self.price)
 
+
 class TreeType(models.Model):
 
     name = models.CharField(max_length=111)
 
     def __str__(self):
         return self.name
+
 
 class TreeName(models.Model):
 
@@ -32,11 +35,13 @@ class TreeName(models.Model):
     def __str__(self):
         return self.name
 
+
 class Region(models.Model):
     name = models.CharField(max_length=111)
 
     def __str__(self):
         return self.name
+
 
 class District(models.Model):
 
@@ -46,6 +51,7 @@ class District(models.Model):
     def __str__(self):
         return self.name
 
+
 class Tree(models.Model):
     tree_type = models.ForeignKey('TreeType', on_delete=models.CASCADE)
     tree_name = models.ForeignKey('TreeName', on_delete=models.CASCADE)
@@ -54,6 +60,7 @@ class Tree(models.Model):
 
     def __str__(self):
         return "{} {} {}".format(self.tree_name, self.tree_type, self.tree_number)
+
 
 class Client(models.Model):
     region = models.ForeignKey('Region', on_delete=models.CASCADE)

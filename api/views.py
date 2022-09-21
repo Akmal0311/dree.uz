@@ -6,33 +6,33 @@ from rest_framework.views import APIView
 
 
 class ClientView(generics.CreateAPIView):
-    queryset = Client.objects.all()
+    queryset = Client
     serializer_class = ClientSerializer
 
 
 class ClientListView(generics.ListAPIView):
-    queryset = Client.objects.all()
+    queryset = Client
     serializer_class = ClientListSerializer
 
 
 class RegionView(generics.ListCreateAPIView):
-    queryset = Region.objects.all()
+    queryset = Region
     serializer_class = RegionSerializer
 
 
 class RegionDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Region.objects.all()
+    queryset = Region
     serializer_class = RegionSerializer
 
 
 class DistrictView(generics.CreateAPIView):
     queryset = District
-    serializer_class = DistrictSerialier
+    serializer_class = DistrictSerializer
 
 
 class DistrictDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = District
-    serializer_class = DistrictSerialier
+    serializer_class = DistrictSerializer
 
 
 class TreeTypeView(generics.CreateAPIView):
@@ -56,7 +56,7 @@ class TreeNameDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class TreePriceView(generics.ListCreateAPIView):
-    queryset = TreePrice.objects.all()
+    queryset = TreePrice
     serializer_class = TreePriceSerializer
 
 
@@ -66,7 +66,7 @@ class TreePriceDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class FeedbackView(generics.ListCreateAPIView):
-    queryset = Feedback.objects.all()
+    queryset = Feedback
     serializer_class = FeedbackSerializer
 
 

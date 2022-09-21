@@ -2,20 +2,24 @@ import instaloader
 from rest_framework import serializers
 from .models import *
 
+
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = '__all__'
+
 
 class TreePriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = TreePrice
         fields = '__all__'
 
+
 class TreeTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TreeType
         fields = '__all__'
+
 
 class TreeNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,12 +31,14 @@ class TreeSerializer(serializers.ModelSerializer):
         model = Tree
         fields = ['tree_type', 'tree_name', 'tree_number']
 
+
 class RegionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
         fields = '__all__'
 
-class DistrictSerialier(serializers.ModelSerializer):
+
+class DistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = District
         fields = '__all__'

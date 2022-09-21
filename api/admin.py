@@ -9,13 +9,16 @@ admin.site.register(District)
 admin.site.register(TreePrice)
 admin.site.register(Feedback)
 
+
 class TreeInline(admin.TabularInline):
     model = Tree
     extra = 0
-    verbose_name = 'Daraxt'
-    verbose_name_plural = 'Daraxtlar'
+    verbose_name = 'Tree'
+    verbose_name_plural = 'Trees'
+
 
 class ClientAdmin(admin.ModelAdmin):
     inlines = [TreeInline]
 
-admin.site.register(Client,ClientAdmin)
+
+admin.site.register(Client, ClientAdmin)
